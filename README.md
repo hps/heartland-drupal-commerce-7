@@ -1,6 +1,6 @@
-## SecureSubmit ZenCart Payment Gateway
+## SecureSubmit Drupal Commerce 7.x Payment Gateway
 
-This extension allows ZenCart to use the Heartland Payment Systems Gateway. All card data is tokenized using Heartland's SecureSubmit product.
+This extension allows Drupal Commerce 7.x to use the Heartland Payment Systems Gateway. All card data is tokenized using Heartland's SecureSubmit product.
 
 ## Installation
 
