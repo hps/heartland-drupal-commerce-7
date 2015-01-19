@@ -1,0 +1,60 @@
+<?php
+/**
+ * @file
+ * Contains requirements function for Commerce SecureSubmit.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function commerce_securesubmit_requirements($phase) {
+  $requirements = array();
+
+  if ($phase == 'runtime') {
+    $t = get_t();
+
+    if (file_exists(libraries_get_path('hps') . '/Hps.php')) {
+      $requirements['commerce_securesubmit_php'] = array(
+        'value' => $t('Installed'),
+        'severity' => REQUIREMENT_OK,
+      );
+    }
+    else {
+      $requirements['commerce_securesubmit_php'] = array(
+        'value' => $t('Missing!'),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => $t('SecureSubmit SDK missing. Download the SecureSubmit SDK from <a href="@url">https://github.com/SecureSubmit/PHP-SDK</a> and place it in to sites/all/libraries/hps', array('@url' => 'https://github.com/SecureSubmit/PHP-SDK')),
+      );
+    }
+
+    $requirements['commerce_securesubmit_php']['title'] = $t('SecureSubmit PHP SDK');
+
+    if (in_array(commerce_default_currency(), array('USD'))) {
+      $requirements['commerce_securesubmit_currency'] = array(
+        'value' => $t('Valid currency'),
+        'severity' => REQUIREMENT_OK,
+      );
+    }
+    else {
+      $requirements['commerce_securesubmit_currency'] = array(
+        'value' => $t('Invalid default currency!'),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => $t('Heartland currently only supports USD.'),
+      );
+    }
+
+    $requirements['commerce_securesubmit_currency']['title'] = $t('SecureSubmit currency check');
+  }
+  return $requirements;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function commerce_securesubmit_uninstall() {
+  // Uninstall rules configuration.
+  $config = rules_config_load('commerce_payment_commerce_securesubmit');
+  if ($config) {
+    rules_config_delete(array($config->id));
+  }
+}
