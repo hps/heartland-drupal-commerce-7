@@ -23,7 +23,7 @@ function commerce_securesubmit_requirements($phase) {
       $requirements['commerce_securesubmit_php'] = array(
         'value' => $t('Missing!'),
         'severity' => REQUIREMENT_ERROR,
-        'description' => $t('SecureSubmit SDK missing. Download the SecureSubmit SDK from <a href="@url">https://github.com/hps/PHP-SDK</a> and place it in to sites/all/libraries/hps', array('@url' => 'https://github.com/hps/PHP-SDK')),
+        'description' => $t('SecureSubmit SDK missing. Download the SecureSubmit SDK from <a href="@url">https://github.com/SecureSubmit/PHP-SDK</a> and place it in to sites/all/libraries/hps', array('@url' => 'https://github.com/SecureSubmit/PHP-SDK')),
       );
     }
 

@@ -10,7 +10,7 @@
  */
 function commerce_securesubmit_drush_command() {
   $items['securesubmit-download'] = array(
-    'description' => dt('Please download the SecureSubmit PHP SDK from https://github.com/hps/heartland-php'),
+    'description' => dt('Please download the SecureSubmit PHP SDK from https://github.com/SecureSubmit/heartland-php'),
   );
   return $items;
 }
@@ -27,7 +27,7 @@ function drush_commerce_securesubmit_download() {
   if (is_dir($path)) {
     drush_log('SecureSubmit PHP SDK already present. No download required.', 'ok');
   }
-  elseif (drush_shell_exec('git clone https://github.com/hps/heartland-php.git ' . $path)) {
+  elseif (drush_shell_exec('git clone https://github.com/SecureSubmit/heartland-php.git ' . $path)) {
     drush_log(dt('SecureSubmit PHP SDK has been cloned via git to @path.', array('@path' => $path)), 'success');
   }
   else {

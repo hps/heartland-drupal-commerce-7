@@ -18,7 +18,7 @@ function commerce_securesubmit_libraries_info() {
     'hps' => array(
       'name' => 'SecureSubmit PHP SDK',
       'vendor url' => 'https://developer.heartlandpaymentsystems.com/SecureSubmit/',
-      'download url' => 'https://github.com/hps/heartland-php',
+      'download url' => 'https://github.com/SecureSubmit/heartland-php',
       'dependencies' => array(),
       'version arguments' => array(
         'file' => 'VERSION',
