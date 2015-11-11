@@ -150,7 +150,7 @@ function _commerce_securesubmit_credit_card_field_remove_name($content, $element
  * Payment method callback: checkout form submission.
  */
 function commerce_securesubmit_submit_form_submit($payment_method, $pane_form, $pane_values, $order, $charge) {
-  if (!class_exists('HpsConfiguration')) {
+  if (!class_exists('HpsServicesConfig')) {
     $path = function_exists('libraries_get_path') ?
       libraries_get_path('hps') : 'sites/all/libraries/hps';
     if (!include($path . '/Hps.php')) {
@@ -158,13 +158,13 @@ function commerce_securesubmit_submit_form_submit($payment_method, $pane_form, $
     }
   }
 
-  $config = new HpsConfiguration();
+  $config = new HpsServicesConfig();
   $config->secretApiKey = $payment_method['settings']['secret_key'];
 
   $config->versionNumber = '0000';
   $config->developerId = '000000';
 
-  $chargeService = new HpsChargeService($config);
+  $chargeService = new HpsCreditService($config);
 
   $order_wrapper = entity_metadata_wrapper('commerce_order', $order);
 
