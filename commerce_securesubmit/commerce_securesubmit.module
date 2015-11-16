@@ -202,7 +202,7 @@ function commerce_securesubmit_submit_form_submit($payment_method, $pane_form, $
 
   try {
     $response = $chargeService->charge(
-                number_format(commerce_currency_amount_to_decimal($charge['amount'], $charge['currency_code'])),
+                number_format(commerce_currency_amount_to_decimal($charge['amount'], $charge['currency_code']), 2),
                 $payment_method['settings']['securesubmit_currency'],
                 $suToken,
                 $validCardHolder);
@@ -253,7 +253,7 @@ function _commerce_securesubmit_load_settings($name = NULL) {
   if (commerce_payment_method_load('commerce_securesubmit') && rules_config_load('commerce_payment_commerce_securesubmit')) {
     $commerce_securesubmit_payment_method = commerce_payment_method_instance_load('commerce_securesubmit|commerce_payment_commerce_securesubmit');
   }
-  
+
   if (isset($name) && rules_config_load('commerce_payment_commerce_securesubmit')) {
     $commerce_securesubmit_payment_method = commerce_payment_method_instance_load('commerce_securesubmit|commerce_payment_commerce_securesubmit');
   }
