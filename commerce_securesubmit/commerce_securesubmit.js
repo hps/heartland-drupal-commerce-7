@@ -32,7 +32,12 @@
             // Show the errors on the form.
             $('div.payment-errors').html($("<div class='messages error'></div>").html(response.message));
 
-            onError && onError(form$);
+            if (window.onError) {
+              window.onError(form$);
+            }
+
+            $('.form-submit').removeAttr("disabled");
+            $('.form-submit').prop('disabled', null);
           } else {
             var token = response.token_value;
             $("#edit-continue").closest("form").append("<input type='hidden' name='securesubmitToken' value='" + token + "'/>");
@@ -53,7 +58,7 @@
 
             // Disable the submit button to prevent repeated clicks.
             $('.form-submit').attr("disabled", "disabled");
-   
+
             var cardFields = {
               number: 'edit-commerce-payment-payment-details-credit-card-number',
               cvc: 'edit-commerce-payment-payment-details-credit-card-code',
