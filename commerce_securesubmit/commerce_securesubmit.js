@@ -30,7 +30,7 @@
         function secureSubmitResponseHandler(response) {
           if (response.message) {
             // Show the errors on the form.
-            $('div.payment-errors').html($("<div class='messages error'></div>").html(response.message));
+            $('div.payment-errors').html($("<div class='messages messages--error error'></div>").html(response.message));
 
             if (window.onError) {
               window.onError(form$);
