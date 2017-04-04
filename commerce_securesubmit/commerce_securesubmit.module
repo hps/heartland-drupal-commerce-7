@@ -202,7 +202,7 @@ function commerce_securesubmit_submit_form_submit($payment_method, $pane_form, $
 
   try {
     $response = $chargeService->charge(
-                number_format(commerce_currency_amount_to_decimal($charge['amount'], $charge['currency_code']), 2),
+                number_format(commerce_currency_amount_to_decimal($charge['amount'], $charge['currency_code']), 2, '.', ''),
                 $payment_method['settings']['securesubmit_currency'],
                 $suToken,
                 $validCardHolder);
