@@ -106,13 +106,33 @@ function _commerce_securesubmit_credit_card_form() {
   );
 
   $form = commerce_payment_credit_card_form($credit_card_fields);
-
+  
   foreach (array_keys($credit_card_fields) as $key) {
     $credit_card_field = &$form['credit_card'][$key];
     $credit_card_field['#attributes']['class'][] = 'securesubmit';
     $credit_card_field['#required'] = FALSE;
     $credit_card_field['#post_render'][] = '_commerce_securesubmit_credit_card_field_remove_name';
   }
+
+  /*
+  $form['credit_card']['number']['#attributes']['class'][] = 'securesubmit';
+  $form['credit_card']['number']['#prefix'] = '<div class="iframeholder" id="iframesCardNumber">';
+  $form['credit_card']['number']['#suffix'] = '</div>';
+  $form['credit_card']['number']['#required'] = FALSE;
+  $form['credit_card']['number']['#post_render'][] = '_commerce_securesubmit_credit_card_field_remove_name';
+
+  $form['credit_card']['exp_month']['#attributes']['class'][] = 'securesubmit';
+  $form['credit_card']['exp_month']['#prefix'] = '<div class="iframesCardExpiration" id="iframesCardNumber">';
+  $form['credit_card']['exp_month']['#suffix'] = '</div>';
+  $form['credit_card']['exp_month']['#required'] = FALSE;
+  $form['credit_card']['exp_month']['#post_render'][] = '_commerce_securesubmit_credit_card_field_remove_name';
+  
+  $form['credit_card']['code']['#attributes']['class'][] = 'securesubmit';
+  $form['credit_card']['code']['#prefix'] = '<div class="iframesCardCvv" id="iframesCardNumber">';
+  $form['credit_card']['code']['#suffix'] = '</div>';
+  $form['credit_card']['code']['#required'] = FALSE;
+  $form['credit_card']['code']['#post_render'][] = '_commerce_securesubmit_credit_card_field_remove_name';
+  */
 
   return $form;
 }
@@ -122,13 +142,14 @@ function _commerce_securesubmit_credit_card_form() {
  */
 function commerce_securesubmit_submit_form($payment_method, $pane_values, $checkout_pane, $order) {
   $form = _commerce_securesubmit_credit_card_form();
+  drupal_add_js('https://api2.heartlandportico.com/SecureSubmit.v1/token/2.1/securesubmit.js', 'external');
 
   // Set our key to settings array.
   drupal_add_js(array('securesubmit' => array('publicKey' => $payment_method['settings']['public_key'])), 'setting');
 
   $form['#attached']['js'] = array(
     drupal_get_path('module', 'commerce_securesubmit') . '/secure.submit-1.0.2.js',
-    drupal_get_path('module', 'commerce_securesubmit') . '/commerce_securesubmit.js',
+    drupal_get_path('module', 'commerce_securesubmit') . '/commerce_securesubmit.js'	
   );
 
   // To display validation errors.
