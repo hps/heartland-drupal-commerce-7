@@ -108,17 +108,14 @@ function _commerce_securesubmit_credit_card_form() {
   $form = commerce_payment_credit_card_form($credit_card_fields);
 
   foreach (array_keys($credit_card_fields) as $key) {
-    $credit_card_field = &$form['credit_card'][$key];
-    $credit_card_field['#attributes']['class'][] = 'securesubmit';
-    $credit_card_field['#required'] = FALSE;
-    $credit_card_field['#post_render'][] = '_commerce_securesubmit_credit_card_field_remove_name';
-  }
 
-  $form['credit_card']['expiry_date'] = [
-    '#type' => 'textfield',
-    '#attributes' => ['class' =>[ 'securesubmit'], 'hidden' => 'hidden'],
-    '#post_render' => '_commerce_securesubmit_credit_card_field_remove_name'
-  ];
+    $form['credit_card'][$key] = array(
+      '#id' => $key,
+      '#prefix' => '<span id="cc_'.$key.'">'.$key.'</span><div id="'.$key.'">',
+      '#suffix' => '</div>',
+    );
+
+  }
 
   return $form;
 }
@@ -130,7 +127,7 @@ function commerce_securesubmit_submit_form($payment_method, $pane_values, $check
   $form = _commerce_securesubmit_credit_card_form();
   $path = function_exists('libraries_get_path') ?
     libraries_get_path('hps') : 'sites/all/libraries/hps';
-//  print_r($path);
+
   if (!include($path . '/Hps.php')) {
   }
   $config = new HpsServicesConfig();
@@ -140,7 +137,6 @@ function commerce_securesubmit_submit_form($payment_method, $pane_values, $check
   drupal_add_js(array('securesubmit' => array('publicKey' => $payment_method['settings']['public_key'])), 'setting');
 
   $form['#attached']['js'] = array(
-//    drupal_get_path('module', 'commerce_securesubmit') . '/secure.submit-1.0.2.js',
     drupal_add_js('https://js.globalpay.com/4.0.20/globalpayments.js'),
     drupal_get_path('module', 'commerce_securesubmit') . '/commerce_securesubmit.js',
   );
@@ -158,7 +154,6 @@ function _commerce_securesubmit_credit_card_field_remove_name($content, $element
   $name_pattern = '/\sname\s*=\s*[\'"]?' . preg_quote($element['#name']) . '[\'"]?/';
   return preg_replace($name_pattern, '', $content);
 }
-
 
 /**
  * Payment method callback: checkout form submission.
@@ -220,7 +215,6 @@ function commerce_securesubmit_submit_form_submit($payment_method, $pane_form, $
       $payment_method['settings']['securesubmit_currency'],
       $suToken,
       $validCardHolder);
-
     $transaction->remote_id = $response->transactionId;
     $transaction->payload[REQUEST_TIME] = time();
     $transaction->message = t('Payment completed successfully.');
