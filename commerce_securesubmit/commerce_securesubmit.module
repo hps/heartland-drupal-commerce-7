@@ -102,16 +102,19 @@ function _commerce_securesubmit_credit_card_form() {
     'number' => '',
     'exp_month' => '',
     'exp_year' => '',
-    'code' => '',
+    'code' => ''
   );
 
   $form = commerce_payment_credit_card_form($credit_card_fields);
 
   foreach (array_keys($credit_card_fields) as $key) {
-    $credit_card_field = &$form['credit_card'][$key];
-    $credit_card_field['#attributes']['class'][] = 'securesubmit';
-    $credit_card_field['#required'] = FALSE;
-    $credit_card_field['#post_render'][] = '_commerce_securesubmit_credit_card_field_remove_name';
+
+    $form['credit_card'][$key] = array(
+      '#id' => $key,
+      '#prefix' => '<span id="cc_'.$key.'">'.$key.'</span><div id="'.$key.'">',
+      '#suffix' => '</div>',
+    );
+
   }
 
   return $form;
@@ -122,12 +125,19 @@ function _commerce_securesubmit_credit_card_form() {
  */
 function commerce_securesubmit_submit_form($payment_method, $pane_values, $checkout_pane, $order) {
   $form = _commerce_securesubmit_credit_card_form();
+  $path = function_exists('libraries_get_path') ?
+    libraries_get_path('hps') : 'sites/all/libraries/hps';
+
+  if (!include($path . '/Hps.php')) {
+  }
+  $config = new HpsServicesConfig();
+  $config->secretApiKey = $payment_method['settings']['secret_key'];
 
   // Set our key to settings array.
   drupal_add_js(array('securesubmit' => array('publicKey' => $payment_method['settings']['public_key'])), 'setting');
 
   $form['#attached']['js'] = array(
-    drupal_get_path('module', 'commerce_securesubmit') . '/secure.submit-1.0.2.js',
+    drupal_add_js('https://js.globalpay.com/4.0.20/globalpayments.js'),
     drupal_get_path('module', 'commerce_securesubmit') . '/commerce_securesubmit.js',
   );
 
@@ -145,7 +155,6 @@ function _commerce_securesubmit_credit_card_field_remove_name($content, $element
   return preg_replace($name_pattern, '', $content);
 }
 
-
 /**
  * Payment method callback: checkout form submission.
  */
@@ -154,7 +163,7 @@ function commerce_securesubmit_submit_form_submit($payment_method, $pane_form, $
     $path = function_exists('libraries_get_path') ?
       libraries_get_path('hps') : 'sites/all/libraries/hps';
     if (!include($path . '/Hps.php')) {
-        // handle this error
+      // handle this error
     }
   }
 
@@ -202,11 +211,10 @@ function commerce_securesubmit_submit_form_submit($payment_method, $pane_form, $
 
   try {
     $response = $chargeService->charge(
-                number_format(commerce_currency_amount_to_decimal($charge['amount'], $charge['currency_code']), 2, '.', ''),
-                $payment_method['settings']['securesubmit_currency'],
-                $suToken,
-                $validCardHolder);
-
+      number_format(commerce_currency_amount_to_decimal($charge['amount'], $charge['currency_code']), 2, '.', ''),
+      $payment_method['settings']['securesubmit_currency'],
+      $suToken,
+      $validCardHolder);
     $transaction->remote_id = $response->transactionId;
     $transaction->payload[REQUEST_TIME] = time();
     $transaction->message = t('Payment completed successfully.');
@@ -295,7 +303,7 @@ function commerce_securesubmit_load_library() {
  */
 function commerce_securesubmit_field_widget_addressfield_standard_form_alter(&$element, &$form_state, $context) {
   if (!$context['field']['field_name'] == 'commerce_customer_address') {
-      return;
+    return;
   }
   commerce_securesubmit_set_addressfield_class_names($element);
 }
