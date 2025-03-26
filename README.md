@@ -1,3 +1,5 @@
+# ** This repository is no longer maintained! **
+
 ## SecureSubmit Drupal Commerce 7.x Payment Gateway
 
 This extension allows Drupal Commerce 7.x to use the Heartland Payment Systems Gateway. All card data is tokenized using Heartland's SecureSubmit product.
